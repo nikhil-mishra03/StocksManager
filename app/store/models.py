@@ -78,7 +78,7 @@ class FundamentalAnalysis(Base):
     __tablename__ = "fundamental_analysis"
     id: Mapped[int] = mapped_column(primary_key = True, autoincrement=True)
     symbol: Mapped[str] = mapped_column(String(32), ForeignKey("instruments.symbol", ondelete="CASCADE"),unique=True, nullable=False)
-    ingested_at: Mapped[datetime] = mapped_column(default=datetime.now())
+    ingested_at: Mapped[datetime] = mapped_column(default=datetime.utcnow())
     company_overview: Mapped[dict | None] = mapped_column(JSONB)
     profit_loss: Mapped[dict | None] = mapped_column(JSONB)
     balance_sheet: Mapped[dict | None] = mapped_column(JSONB)

@@ -1,8 +1,16 @@
 from langchain.agents import create_agent
 from langchain_openai import ChatOpenAI
-from app.service.holding_service import get_holding_snapshot
-from app.service.gtt_service import get_active_gtts_with_metrics, get_gtts_grouped_by_instrument
-from app.service.market_data import get_enriched_market_data, get_price_levels
+# from app.service.holding_service import get_holding_snapshot
+# from app.service.gtt_service import get_active_gtts_with_metrics, get_gtts_grouped_by_instrument
+# from app.service.market_data import get_enriched_market_data, get_price_levels
+from app.tools.quant_tools import (
+    get_holding_snapshot_tool,
+    get_active_gtts_with_metrics_tool,
+    get_gtts_grouped_by_instrument_tool,
+    get_enriched_market_data_tool,
+    get_price_levels_tool,
+    get_all_instruments_tool,
+)
 from fastapi.encoders import jsonable_encoder
 from app.core.logger_config import get_logger
 import json
@@ -13,7 +21,7 @@ load_dotenv()
 
 logger = get_logger(__name__)
 
-model = ChatOpenAI(model="gpt-4",api_key = os.getenv("OPENAI_API_KEY"))
+model = ChatOpenAI(model="gpt-4o-mini",api_key = os.getenv("OPENAI_API_KEY"))
 SYSTEM_PROMPT = SYSTEM_PROMPT = """
 You are StockGTT, a professional quantitative trading assistant focused on managing
 stock GTT (Good Till Triggered) orders for a long-term investor.
@@ -48,55 +56,45 @@ Output format:
   - Risk assessment: based on ATR/volatility and distance to trigger.
 """
 tools = [
-    get_holding_snapshot,
-    get_active_gtts_with_metrics,
-    get_gtts_grouped_by_instrument,
-    get_enriched_market_data,
-    get_price_levels,
+    get_holding_snapshot_tool,
+    get_active_gtts_with_metrics_tool,
+    get_gtts_grouped_by_instrument_tool,
+    get_enriched_market_data_tool,
+    get_price_levels_tool,
+    get_holding_snapshot_tool,
+    get_all_instruments_tool,
 ]
 
 agent = create_agent(
     model = model,
-    # tools = tools,
+    tools = tools,
     system_prompt = SYSTEM_PROMPT
 )
 
-def build_agent_context():
-    holdings = get_holding_snapshot()
+# def build_agent_context():
+#     holdings = get_holding_snapshot()
     
-    gtts = get_gtts_grouped_by_instrument()
-    instruments_token = [
-        gtt.instrument_token for gtt in gtts
-    ]
-    logger.info(instruments_token)
-    gtts = jsonable_encoder(gtts)
-    price_levels = [
-        get_price_levels(instrument_token) for instrument_token in instruments_token
-    ]
-    price_levels = jsonable_encoder(price_levels)
-    logger.info(price_levels)
+#     gtts = get_gtts_grouped_by_instrument()
+#     instruments_token = [
+#         gtt.instrument_token for gtt in gtts
+#     ]
+#     logger.info(instruments_token)
+#     gtts = jsonable_encoder(gtts)
+#     price_levels = [
+#         get_price_levels(instrument_token) for instrument_token in instruments_token
+#     ]
+#     price_levels = jsonable_encoder(price_levels)
+#     logger.info(price_levels)
     
-    return {
-        "holdings": holdings,
-        "gtts": gtts,
-        "price_levels": price_levels
-    }
+#     return {
+#         "holdings": holdings,
+#         "gtts": gtts,
+#         "price_levels": price_levels
+#     }
 
 def run_agent():
-    ctx = build_agent_context()
+    # ctx = build_agent_context()
     user_content = f"""
-You are given the follwin portfolia context.
-
-[HOLDINGS]
-{json.dumps(ctx["holdings"])}
-
-[GTTS]
-{json.dumps(ctx["gtts"])}
-
-[PRICE_LEVELS]
-{json.dumps(ctx["price_levels"])}
-
-
 Task:
 For each GTT Order, recommend whether to KEEP, MODIFY (with a new trigger price), 
 CANCEL, or CREATE A NEW GTT.
@@ -111,16 +109,26 @@ Return:
 - A numbered list by symbol and GTT id.
 - For each: Action, reasoning (with specific indicators), risk assessment.
     """
-    response  =agent.invoke(
+    # response  =agent.invoke(
+    #     {
+    #     "messages": [
+    #         {"role": "user",
+    #          "content": user_content
+    #          }
+    #     ]
+    # }
+    # )
+    # logger.info(response)
+    response = agent.invoke(
         {
-        "messages": [
-            {"role": "user",
-             "content": user_content
-             }
-        ]
-    }
+            "messages": [
+                {
+                    "role": "user",
+                    "content": user_content
+                }
+            ]
+        }
     )
-    logger.info(response)
     return response
 
 
