@@ -9,6 +9,8 @@ from ..service.market_data import get_enriched_market_data, get_price_levels
 from ..service.instrument_service import get_instrument_by_symbol
 from ..service.holding_service import get_holding_snapshot
 from ..agents.quant_agent import run_agent
+from ..agents.fundamental_analysis_agent import run_agent as run_fundamental_analysis_agent
+from ..agents.decision_agent import run_pipeline as run_decision_agent
 # from app.fundamentals.fundamental_analysis import get_fundamental_analysis
 from datetime import datetime, timedelta
 import json
@@ -131,19 +133,33 @@ async def test_quant_agent_response():
         raise HTTPException(status_code=500, detail=f"Failed to fetch quant agent response: {e}")
 
 
-# @testing_router.get('/fundamental-analysis')
-# async def test_fundamental_analysis(
-#     symbol: str,
-# ):
-#     try:
-#         data = get_fundamental_analysis(symbol)
-#         logger.info(data)
-#         return JSONResponse(status_code = 200,
-#                             content = {
-#                                 'message': 'Fundamental analysis fetched successfully',
-#                                 'status': 'success',
-#                                 # 'data': data
-#                             })
-#     except Exception as e:
-#         logger.error(f"Failed to fetch fundamental analysis: {e}")
-#         raise HTTPException(status_code=500, detail=f"Failed to fetch fundamental analysis: {e}")
+@testing_router.get('/fundamental-analysis')
+async def test_fundamental_analysis(
+):
+    try:
+        data = run_fundamental_analysis_agent()
+        logger.info(data)
+        return JSONResponse(status_code = 200,
+                            content = {
+                                'message': 'Fundamental analysis fetched successfully',
+                                'status': 'success',
+                                'data': jsonable_encoder(data)
+                            })
+    except Exception as e:
+        logger.error(f"Failed to fetch fundamental analysis: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch fundamental analysis: {e}")
+    
+
+@testing_router.get('/decision-agent-response')
+async def test_decision_agent_response():
+    try:
+        data = run_decision_agent()
+        return JSONResponse(status_code = 200,
+                            content = {
+                                'message': 'Decision agent response fetched successfully',
+                                'status': 'success',
+                                'data': jsonable_encoder(data)
+                            })
+    except Exception as e:
+        logger.error(f"Failed to fetch decision agent response: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to fetch decision agent response: {e}")

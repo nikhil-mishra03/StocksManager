@@ -1,11 +1,12 @@
 from app.brokers.zerodha.auth_token import AuthorizationToken
 from app.core.config import get_config
 from app.core.logger_config import get_logger
-from datetime import datetime
+from datetime import datetime, timedelta
 import requests
 from app.store.db import SessionLocal
 from app.store.models import HistoricalData
 from app.store.models import Instrument as InstrumentModel
+from typing import Optional
 
 logger = get_logger(__name__)
 session = SessionLocal()
@@ -19,15 +20,19 @@ class HistoricalDataService:
             "Authorization": f"token {self.settings.kite_api_key}:{self.token}"
         }
 
-    def get_historical_data(self, minute, from_time, to_time):
+    def get_historical_data(self, interval: str, from_time: Optional[datetime] = None, to_time: Optional[datetime] = None):
         """Fetch historical data for all active instruments"""
         try:
             logger.info("Fetching historical data...")
             instruments = self.get_instruments()
             logger.info(f"Found {len(instruments)} instruments. Fetching data...")
+            if to_time is None:
+                to_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            if from_time is None:
+                from_time = (datetime.now() - timedelta(days=365)).strftime('%Y-%m-%d %H:%M:%S')
             for instrument in instruments:
                 instrument_token = instrument.token
-                historical_data = self.get_instrument_data(instrument_token, minute, from_time, to_time)
+                historical_data = self.get_instrument_data(instrument_token, interval, from_time, to_time)
                 session.add_all(historical_data)
             session.commit()
         except Exception as e:

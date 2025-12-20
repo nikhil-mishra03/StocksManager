@@ -9,9 +9,18 @@ from app.fundamentals.company_overview import get_company_overview
 from app.fundamentals.profit_loss import get_profit_loss
 from app.store.models import FundamentalAnalysis
 from app.store.db import SessionLocal
+from app.service.instrument_service import get_all_instruments
+
+
 
 logger = get_logger(__name__)
 session = SessionLocal()
+
+def get_all_fundamentals():
+    instruments = get_all_instruments()
+    for instrument in instruments:
+        logger.info(instrument.symbol)
+        store_fundamentals(f"{instrument.symbol}")
 
 
 def get_fundamentals(symbol: str) -> Dict[str, Any]:
@@ -30,17 +39,17 @@ def get_fundamentals(symbol: str) -> Dict[str, Any]:
     balance: List[Dict[str, Any]] = []
 
     try:
-        overview = get_company_overview(symbol)
+        overview = get_company_overview(f"{symbol}.NS")
     except Exception as exc:  # noqa: BLE001
         logger.error("Failed to fetch company overview for %s", symbol, exc_info=exc)
 
     try:
-        income = get_profit_loss(symbol)
+        income = get_profit_loss(f"{symbol}.NS")
     except Exception as exc:  # noqa: BLE001
         logger.error("Failed to fetch income statement for %s", symbol, exc_info=exc)
 
     try:
-        balance = get_balance_sheet(symbol)
+        balance = get_balance_sheet(f"{symbol}.NS")
     except Exception as exc:  # noqa: BLE001
         logger.error("Failed to fetch balance sheet for %s", symbol, exc_info=exc)
     
@@ -83,4 +92,4 @@ if __name__ == "__main__":
     # Simple smoke test; adjust ticker suffix as needed (e.g., .NS for NSE)
     import pprint
 
-    pprint.pp(store_fundamentals("INFY"))
+    pprint.pp(get_all_fundamentals())

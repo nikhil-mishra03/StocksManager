@@ -15,4 +15,5 @@ dependencies = [
     "langchain",
     "langchain-openai",
     "yfinance",
+    "apscheduler",
 ]

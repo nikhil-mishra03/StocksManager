@@ -6,6 +6,8 @@ from app.core.logger_config import get_logger
 from sqlalchemy.orm import Session
 from app.core.config import get_config
 from app.api.testing_router import testing_router
+from app.schedulers.fundamentals_scheduler import start_fundamentals_scheduler, stop_fundamentals_scheduler
+from app.schedulers.portfolio_scheduler import start_portfolio_scheduler, stop_portfolio_scheudler
 
 import uvicorn
 
@@ -19,10 +21,15 @@ async def lifespan(app: FastAPI):
         raise RuntimeError("Failed to connect to the database.")
     logger.info("Database connection established successfully.")
 
+    start_fundamentals_scheduler()
+    start_portfolio_scheduler()
+
     # When the application is shutting down - whether normally or due to an error, clear the db connection pool
     try:
         yield
     finally:
+        stop_fundamentals_scheduler()
+        stop_portfolio_scheudler()
         SessionLocal.remove()
         logger.info("Shutting down application.")
 
