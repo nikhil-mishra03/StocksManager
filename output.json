@@ -1,0 +1,48 @@
+[
+  {
+    "symbol": "INFY",
+    "current_gtt": 1697,
+    "recommended_action": "KEEP",
+    "buy_price": null,
+    "rationale": {
+      "fundamental_analysis": "Revenue increased from ₹16.31B in FY2022 to ₹19.28B in FY2025 (TTM), a ~5.7% CAGR, while net profit moved from ₹2.96B to ₹3.16B (~2.2% CAGR). Profitability is solid though OPM compressed from 23.0% (FY2022) to 21.1% (FY2025 TTM), and net margin stands at ~16.6%. ROE of 29.0% is well above the 15% threshold, supporting quality and capital efficiency. Valuation with P/E 22.9 and P/B 6.47 appears reasonable relative to stability and returns. Balance sheet strength is evident with debt-to-equity ~0.55 and current ratio ~2.27, indicating robust liquidity.",
+      "technical_analysis": "Price (₹1638.7) vs EMA9 (₹1638.69), EMA20 (₹1638.23), EMA50 (₹1633.64), EMA200 (₹1615.43) shows bullish stacking (Price ≈ EMA9 > EMA20 > EMA50 > EMA200), indicating an uptrend. MACD line (1.05) is below the signal (1.45) with histogram -0.40, showing mild bearish divergence even as trend stays positive. RSI is extremely high at 99.94, signaling overbought conditions and potential for shallow pullbacks. Price sits at the upper Bollinger Band (₹1638.70 / ₹1638.70 / ₹1638.70), suggesting resistance. ATR ₹24.95 (1.52% of price), and the trigger at ₹1697 is 58.3/24.95 ≈ 2.34 ATR away (REASONABLE) for a breakout-style buy.",
+      "combined_assessment": "Fundamentals and technicals broadly agree: high-quality business with reasonable valuation in a prevailing uptrend, though momentum is stretched. The key reason to KEEP is that the breakout trigger is ~2.3 ATR away, offering a balanced probability of execution without being excessively tight. Risk is that the overbought RSI resolves via mean reversion before triggering or that earnings guidance/margins disappoint, undercutting the trend. Invalidation would be a breakdown below EMA50 or a bearish cross with expanding negative MACD histogram alongside weak order book/newsflow."
+    },
+    "confidence": 80,
+    "confidence_breakdown": {
+      "fundamental_confidence": 85,
+      "technical_confidence": 75,
+      "data_quality": 85
+    },
+    "current_price": 1638.7,
+    "distance_to_trigger_pct": 3.5576981753829227,
+    "distance_to_trigger_atr": 2.34,
+    "trend_state": "uptrend",
+    "risk_reward": "1:2.1",
+    "time_horizon": "medium"
+  },
+  {
+    "symbol": "OLECTRA",
+    "current_gtt": 1100,
+    "recommended_action": "MODIFY",
+    "buy_price": 1125,
+    "rationale": {
+      "fundamental_analysis": "Revenue rose from ₹5.92B in FY2022 to ₹17.98B in FY2025 (TTM), a ~45% CAGR, while net profit increased from ₹0.35B to ₹1.39B (~59% CAGR). Profitability has improved with OPM moving from 9.34% (FY2022) to 12.42% (FY2025 TTM), and net margin is ~7.27%. ROE at 13.53% is slightly below the 15% threshold, suggesting good but not outstanding efficiency. Valuation is demanding with P/E 67.6 and P/B 8.59, which require sustained growth to justify. Balance sheet leverage has risen with debt-to-equity from 0.73 (FY2024) to 1.06 (FY2025 TTM) while current ratio eased to 1.64, acceptable but trending tighter.",
+      "technical_analysis": "Price (₹1175.3) vs EMA9 (₹1175.27), EMA20 (₹1173.82), EMA50 (₹1167.01), EMA200 (₹1176.50) shows mixed alignment (short-term bullish but price just below EMA200), implying sideways. MACD line (2.90) below signal (3.96) and histogram (-1.06) suggest weakening momentum; RSI at 93.93 is overbought. Price is at the upper Bollinger Band (₹1175.30 / ₹1175.30 / ₹1175.30), indicating resistance. ATR is ₹42.99 (3.66% of price); the current trigger at ₹1100 is 75.3/42.99 ≈ 1.75 ATR away (REASONABLE). Moving the trigger to ₹1125 tightens it to ~50.3/42.99 ≈ 1.17 ATR (still REASONABLE) and better aligns with round-number support while improving fill odds.",
+      "combined_assessment": "Fundamentals show strong growth but a high valuation and rising leverage; technicals are overbought with sideways bias—moderate disagreement on timing. The primary reason to MODIFY to ₹1125 is to reduce distance while maintaining a disciplined pullback entry near support, improving execution without chasing. Risk is that the stock corrects more deeply toward ₹1100 or below if momentum fades or orders/news disappoint. Invalidation would be a breakdown below EMA50/₹1100 with expanding negative MACD, or a material deterioration in balance sheet or margins."
+    },
+    "confidence": 70,
+    "confidence_breakdown": {
+      "fundamental_confidence": 70,
+      "technical_confidence": 70,
+      "data_quality": 80
+    },
+    "current_price": 1175.3,
+    "distance_to_trigger_pct": -6.40687484046626,
+    "distance_to_trigger_atr": 1.75,
+    "trend_state": "sideways",
+    "risk_reward": "1:1.5",
+    "time_horizon": "short"
+  }
+]
