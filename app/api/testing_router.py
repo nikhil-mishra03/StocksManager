@@ -96,7 +96,7 @@ async def test_enriched_market_data(
                             content = {
                                 'message': 'Enriched market data price leve fetched successfully',
                                 'status': 'success',
-                                'data': data2
+                                'data': data
                             })
     except Exception as e:
         logger.error(f"Failed to fetch enriched market data: {e}")
