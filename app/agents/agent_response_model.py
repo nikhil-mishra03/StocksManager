@@ -204,3 +204,86 @@ class FundamentalAnalysisAgentResponseList(BaseModel):
 class DecisionAgentResponseList(BaseModel):
     """List of final decision agent responses."""
     items: List[DecisionAgentResponse]
+
+
+# ============================================================
+# Sentiment Agent Response (for news/sentiment analysis)
+# ============================================================
+
+class NewsArticleSummary(BaseModel):
+    """Summary of a single news article's sentiment."""
+
+    headline: str = Field(..., description="The news headline")
+    source: str = Field(..., description="News source (e.g., 'Economic Times', 'Moneycontrol')")
+    sentiment: str = Field(
+        ...,
+        description="Sentiment of this article: 'bullish', 'bearish', or 'neutral'"
+    )
+    key_point: str = Field(
+        ...,
+        description="One-sentence summary of the key takeaway from this article"
+    )
+
+
+class SentimentAgentResponse(BaseModel):
+    """Response from the sentiment analysis agent for a single stock."""
+
+    symbol: str = Field(..., description="Stock symbol")
+
+    # Overall sentiment
+    overall_sentiment: str = Field(
+        ...,
+        description="Overall sentiment: 'bullish', 'bearish', or 'neutral'"
+    )
+    sentiment_score: int = Field(
+        ...,
+        ge=-100,
+        le=100,
+        description="Sentiment score from -100 (extremely bearish) to +100 (extremely bullish). 0 is neutral."
+    )
+
+    # Article analysis
+    articles_analyzed: int = Field(..., description="Number of news articles analyzed")
+    article_summaries: List[NewsArticleSummary] = Field(
+        default_factory=list,
+        description="Summary of each analyzed article"
+    )
+
+    # Buy/Sell signals from news
+    buy_signals: List[str] = Field(
+        default_factory=list,
+        description="List of bullish signals extracted from news (e.g., 'Analyst upgrade', 'Strong earnings')"
+    )
+    sell_signals: List[str] = Field(
+        default_factory=list,
+        description="List of bearish signals extracted from news (e.g., 'Downgrade', 'Regulatory concerns')"
+    )
+
+    # Analyst recommendations if mentioned
+    analyst_consensus: str = Field(
+        default="unknown",
+        description="Analyst consensus if mentioned in news: 'strong buy', 'buy', 'hold', 'sell', 'strong sell', or 'unknown'"
+    )
+
+    # Summary and confidence
+    summary: str = Field(
+        ...,
+        description="2-3 sentence summary of the overall news sentiment and key themes"
+    )
+    confidence: int = Field(
+        ...,
+        ge=0,
+        le=100,
+        description="Confidence in sentiment analysis (0-100). Lower if few articles or ambiguous news."
+    )
+
+    # Recency indicator
+    news_recency: str = Field(
+        ...,
+        description="How recent the news is: 'today', 'this_week', 'this_month', or 'stale'"
+    )
+
+
+class SentimentAgentResponseList(BaseModel):
+    """List of sentiment agent responses."""
+    items: List[SentimentAgentResponse]
